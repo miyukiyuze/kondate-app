@@ -1127,11 +1127,11 @@ const MISO_INGREDIENTS = [
 ];
 
 const DEFAULT_FAMILY = [
-  { id: "papa", name: "旦那さん", sub: "43歳", likes: [], dislikes: [], allergies: [] },
-  { id: "mama", name: "私", sub: "42歳", likes: [], dislikes: [], allergies: [] },
-  { id: "son", name: "長男", sub: "12歳", likes: [], dislikes: [], allergies: [] },
-  { id: "daughter1", name: "長女", sub: "8歳", likes: [], dislikes: [], allergies: [] },
-  { id: "daughter2", name: "次女", sub: "3歳", likes: [], dislikes: [], allergies: [] },
+  { id: "member1", name: "家族1", sub: "", likes: [], dislikes: [], allergies: [] },
+  { id: "member2", name: "家族2", sub: "", likes: [], dislikes: [], allergies: [] },
+  { id: "member3", name: "家族3", sub: "", likes: [], dislikes: [], allergies: [] },
+  { id: "member4", name: "家族4", sub: "", likes: [], dislikes: [], allergies: [] },
+  { id: "member5", name: "家族5", sub: "", likes: [], dislikes: [], allergies: [] },
 ];
 
 function matchesKeyword(dish, keyword) {
@@ -1391,6 +1391,11 @@ function KondateApp() {
 
   function toggleEditor(id) {
     setOpenEditor(openEditor === id ? null : id);
+  }
+
+  function updateMemberField(memberId, field, value) {
+    const next = family.map((f) => (f.id === memberId ? { ...f, [field]: value } : f));
+    saveFamily(next);
   }
 
   function addTag(memberId, field) {
@@ -1712,7 +1717,7 @@ function KondateApp() {
       <p style={styles.title}>🌸 今日のごはん相談室</p>
       <p style={styles.sub}>家族の好みをもとに、主菜と副菜を考えます</p>
 
-      <p style={styles.sectionLabel}>👪 家族（タップで好き嫌いを編集）</p>
+      <p style={styles.sectionLabel}>👪 家族（タップで名前・好き嫌いを編集）</p>
       <div style={styles.familyRow}>
         {family.map((f) => (
           <div key={f.id} style={styles.familyChip} onClick={() => toggleEditor(f.id)}>
@@ -1726,7 +1731,23 @@ function KondateApp() {
         (f) =>
           openEditor === f.id && (
             <div key={f.id} style={styles.editorBox} className="kfade">
-              <p style={{ fontSize: "13px", fontWeight: 500, margin: "0 0 6px" }}>{f.name}の好き嫌い</p>
+              <p style={{ fontSize: "12px", color: "#B58AA0", margin: "0 0 4px" }}>名前・続柄</p>
+              <div style={styles.tagInputRow}>
+                <input
+                  style={styles.input}
+                  placeholder="例：旦那さん"
+                  value={f.name}
+                  onChange={(e) => updateMemberField(f.id, "name", e.target.value)}
+                />
+                <input
+                  style={{ ...styles.input, flex: 0.6 }}
+                  placeholder="例：43歳"
+                  value={f.sub}
+                  onChange={(e) => updateMemberField(f.id, "sub", e.target.value)}
+                />
+              </div>
+
+              <p style={{ fontSize: "13px", fontWeight: 500, margin: "14px 0 6px" }}>{f.name}の好き嫌い</p>
 
               <p style={{ fontSize: "12px", color: "#B58AA0", margin: "8px 0 4px" }}>好きなもの</p>
               <div style={styles.tagList}>
